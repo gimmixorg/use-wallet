@@ -1,4 +1,4 @@
-import Web3Modal, { IProviderOptions } from 'web3modal';
+import Web3Modal, { ICoreOptions, IProviderOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
 
@@ -29,10 +29,8 @@ export const useWallet: UseWallet = () => {
   const network = useStore(state => state.network);
   const provider = useStore(state => state.provider);
 
-  const connect: ConnectWallet = async providerOptions => {
-    const web3Modal = new Web3Modal({
-      providerOptions,
-    });
+  const connect: ConnectWallet = async (opts?: Partial<ICoreOptions>) => {
+    const web3Modal = new Web3Modal(opts);
     const web3ModalProvider = await web3Modal.connect();
 
     const getNetwork = async () => {
