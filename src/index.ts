@@ -11,7 +11,7 @@ type State = {
 const useStore = create<State>(_set => ({}));
 
 type Account = string;
-type ConnectWallet = (providerOptions: IProviderOptions) => void;
+type ConnectWallet = (opts?: Partial<ICoreOptions>) => void;
 
 type UseWallet = () => State & {
   connect: ConnectWallet;
@@ -29,7 +29,7 @@ export const useWallet: UseWallet = () => {
   const network = useStore(state => state.network);
   const provider = useStore(state => state.provider);
 
-  const connect: ConnectWallet = async (opts?: Partial<ICoreOptions>) => {
+  const connect: ConnectWallet = async opts => {
     const web3Modal = new Web3Modal(opts);
     const web3ModalProvider = await web3Modal.connect();
 
