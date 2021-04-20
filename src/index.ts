@@ -1,4 +1,4 @@
-import Web3Modal, { ICoreOptions, IProviderOptions } from 'web3modal';
+import Web3Modal, { ICoreOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
 
