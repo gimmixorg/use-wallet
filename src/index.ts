@@ -1,6 +1,7 @@
 import Web3Modal, { ICoreOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
+import { useRef } from 'react';
 
 type State = {
   provider?: Web3Provider;
@@ -28,11 +29,12 @@ export const useWallet: UseWallet = () => {
   const account = useStore(state => state.account);
   const network = useStore(state => state.network);
   const provider = useStore(state => state.provider);
-
+  const web3ModalRef = useRef<Web3Modal>(null);
   const connect: ConnectWallet = async opts => {
     const web3Modal = new Web3Modal(opts);
     const web3ModalProvider = await web3Modal.connect();
-
+    //@ts-ignore
+    web3ModalRef.current = web3Modal;
     const getNetwork = async () => {
       const network = await initialProvider.getNetwork();
       if (NETWORK_NAME_OVERRIDES[network.chainId])
@@ -72,5 +74,12 @@ export const useWallet: UseWallet = () => {
     });
   };
 
-  return { connect, provider, account, network, disconnect };
+  return {
+    connect,
+    provider,
+    account,
+    network,
+    disconnect,
+    web3Modal: web3ModalRef.current,
+  };
 };
