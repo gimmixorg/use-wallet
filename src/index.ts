@@ -14,45 +14,39 @@ const useStore = create<State>(_set => ({}));
 
 type Account = string;
 type ConnectWallet = (opts?: Partial<ICoreOptions>) => void;
-
+type DisconnectWallet = () => void;
 type UseWallet = () => State & {
   connect: ConnectWallet;
-  disconnect: () => void;
-};
-
-const NETWORK_NAME_OVERRIDES: Record<number, string> = {
-  1: 'ethereum',
-  137: 'matic',
-  80001: 'mumbai',
+  disconnect: DisconnectWallet;
 };
 
 export const useWallet: UseWallet = () => {
+  // Retreive the current values from the store, and automatically re-render on updates
   const account = useStore(state => state.account);
   const network = useStore(state => state.network);
   const provider = useStore(state => state.provider);
-  const web3ModalRef = useRef<Web3Modal>();
-  const connect: ConnectWallet = async opts => {
-    const web3Modal = new Web3Modal(opts);
-    const web3ModalProvider = await web3Modal.connect();
-    //@ts-ignore
-    web3ModalRef.current = web3Modal;
-    const getNetwork = async () => {
-      const network = await initialProvider.getNetwork();
-      if (NETWORK_NAME_OVERRIDES[network.chainId])
-        network.name = NETWORK_NAME_OVERRIDES[network.chainId];
-      return network;
-    };
 
+  // Set up a reference to the web3Modal object that'll persist between renders
+  const web3ModalRef = useRef<Web3Modal>();
+
+  const connect: ConnectWallet = async opts => {
+    // Launch modal with the given options
+    const web3Modal = new Web3Modal(opts);
+    web3ModalRef.current = web3Modal;
+    const web3ModalProvider = await web3Modal.connect();
+
+    // Set up Ethers provider and initial state with the response from the web3Modal
     const initialProvider = new Web3Provider(web3ModalProvider, 'any');
+    const getNetwork = () => initialProvider.getNetwork();
     const initialAccounts = await initialProvider.listAccounts();
     const initialNetwork = await getNetwork();
-
     useStore.setState({
       provider: initialProvider,
       network: initialNetwork,
       account: initialAccounts[0],
     });
 
+    // Set up event listeners to handle state changes
     web3ModalProvider.on('accountsChanged', (accounts: string[]) => {
       useStore.setState({ account: accounts[0] });
     });
@@ -67,7 +61,8 @@ export const useWallet: UseWallet = () => {
     });
   };
 
-  const disconnect = async () => {
+  const disconnect: DisconnectWallet = async () => {
+    web3ModalRef.current?.clearCachedProvider();
     useStore.setState({
       provider: undefined,
       network: undefined,
