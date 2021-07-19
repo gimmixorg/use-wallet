@@ -1,6 +1,6 @@
-# ✵useWallet✵
+# ✵ useWallet ✵
 
-An easy-to-integrate, React hook for connecting and interacting with a Web 3 wallet.
+An easy-to-integrate React hook for connecting and interacting with a Web 3 wallet.
 
 Uses [Web3Modal](https://github.com/Web3Modal/web3modal) and [Zustand](https://github.com/pmndrs/zustand).
 
