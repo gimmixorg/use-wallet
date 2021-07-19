@@ -32,7 +32,7 @@ const UserAddress = () => {
 
 ```
 
-To run a transaction or sign a message, use the `provider` object returned by the hook for connected wallets. This is a standard [Ether.js Provider](https://docs.ethers.io/v5/api/providers/provider/).
+To run a transaction or sign a message, use the `provider` object returned by the hook for connected wallets. This is a standard [Ethers.js Provider](https://docs.ethers.io/v5/api/providers/provider/).
 
 ```
 const SignMessageButton = () => {
