@@ -1,6 +1,6 @@
-# ✵useWallet✵
+# ✵ useWallet ✵
 
-An easy-to-integrate, React hook for connecting and interacting with a Web 3 wallet.
+An easy-to-integrate React hook for connecting and interacting with a Web 3 wallet.
 
 Uses [Web3Modal](https://github.com/Web3Modal/web3modal) and [Zustand](https://github.com/pmndrs/zustand).
 
@@ -32,7 +32,7 @@ const UserAddress = () => {
 
 ```
 
-To run a transaction or sign a message, use the `provider` object returned by the hook for connected wallets. This is a standard [Ether.js Provider](https://docs.ethers.io/v5/api/providers/provider/).
+To run a transaction or sign a message, use the `provider` object returned by the hook for connected wallets. This is a standard [Ethers.js Provider](https://docs.ethers.io/v5/api/providers/provider/).
 
 ```
 const SignMessageButton = () => {
