@@ -27,7 +27,7 @@ export const useWallet: UseWallet = () => {
   const provider = useStore(state => state.provider);
 
   // Set up a reference to the web3Modal object that'll persist between renders
-  const web3ModalRef = useRef<Web3Modal>();
+  const web3ModalRef = useRef<Web3Modal>(new Web3Modal());
 
   const connect: ConnectWallet = async opts => {
     // Launch modal with the given options
