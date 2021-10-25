@@ -1,7 +1,7 @@
 import Web3Modal, { ICoreOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 type State = {
   provider?: Web3Provider;
@@ -25,18 +25,16 @@ export const useWallet: UseWallet = () => {
   const account = useStore(state => state.account);
   const network = useStore(state => state.network);
   const provider = useStore(state => state.provider);
-
-  // Set up a reference to the web3Modal object that'll persist between renders
-  const web3ModalRef = useRef<Web3Modal>();
+  const web3Modal = useStore(state => state.web3Modal);
 
   useEffect(() => {
-    web3ModalRef.current = new Web3Modal();
+    useStore.setState({ web3Modal: new Web3Modal() });
   }, []);
 
   const connect: ConnectWallet = async opts => {
     // Launch modal with the given options
     const web3Modal = new Web3Modal(opts);
-    web3ModalRef.current = web3Modal;
+    useStore.setState({ web3Modal });
     const web3ModalProvider = await web3Modal.connect();
 
     // Set up Ethers provider and initial state with the response from the web3Modal
@@ -66,7 +64,7 @@ export const useWallet: UseWallet = () => {
   };
 
   const disconnect: DisconnectWallet = async () => {
-    web3ModalRef.current?.clearCachedProvider();
+    web3Modal?.clearCachedProvider();
     useStore.setState({
       provider: undefined,
       network: undefined,
@@ -80,6 +78,6 @@ export const useWallet: UseWallet = () => {
     account,
     network,
     disconnect,
-    web3Modal: web3ModalRef.current,
+    web3Modal,
   };
 };
