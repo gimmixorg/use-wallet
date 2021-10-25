@@ -1,7 +1,7 @@
 import Web3Modal, { ICoreOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 type State = {
   provider?: Web3Provider;
@@ -27,7 +27,11 @@ export const useWallet: UseWallet = () => {
   const provider = useStore(state => state.provider);
 
   // Set up a reference to the web3Modal object that'll persist between renders
-  const web3ModalRef = useRef<Web3Modal>(new Web3Modal());
+  const web3ModalRef = useRef<Web3Modal>();
+
+  useEffect(() => {
+    web3ModalRef.current = new Web3Modal();
+  }, []);
 
   const connect: ConnectWallet = async opts => {
     // Launch modal with the given options
