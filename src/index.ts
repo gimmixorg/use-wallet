@@ -1,7 +1,7 @@
 import Web3Modal, { ICoreOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 type State = {
   provider?: Web3Provider;
@@ -27,7 +27,7 @@ export const useWallet: UseWallet = () => {
   const provider = useStore(state => state.provider);
   const web3Modal = useStore(state => state.web3Modal);
 
-  const connect: ConnectWallet = async opts => {
+  const connect: ConnectWallet = useCallback(async opts => {
     // Launch modal with the given options
     const web3Modal = new Web3Modal(opts);
     const web3ModalProvider = await web3Modal.connect();
@@ -61,16 +61,16 @@ export const useWallet: UseWallet = () => {
 
     useStore.setState(nextState);
     return nextState;
-  };
+  }, []);
 
-  const disconnect: DisconnectWallet = async () => {
+  const disconnect: DisconnectWallet = useCallback(async () => {
     web3Modal?.clearCachedProvider();
     useStore.setState({
       provider: undefined,
       network: undefined,
       account: undefined,
     });
-  };
+  }, [web3Modal?.clearCachedProvider]);
 
   return {
     connect,
