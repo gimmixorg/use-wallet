@@ -1,21 +1,23 @@
+import { useCallback } from 'react';
 import Web3Modal, { ICoreOptions } from 'web3modal';
 import { Network, Web3Provider } from '@ethersproject/providers';
 import create from 'zustand';
-import { useEffect, useCallback } from 'react';
 
 type State = {
-  provider?: Web3Provider;
-  account?: Account;
-  network?: Network;
-  web3Modal?: Web3Modal;
+  provider: Web3Provider;
+  account: Account;
+  network: Network;
+  web3Modal: Web3Modal;
 };
 
-const useStore = create<State>(_set => ({ web3Modal: new Web3Modal() }));
+const useStore = create<Partial<State>>(_set => ({
+  web3Modal: typeof window !== 'undefined' ? new Web3Modal() : undefined,
+}));
 
 type Account = string;
 type ConnectWallet = (opts?: Partial<ICoreOptions>) => Promise<State>;
 type DisconnectWallet = () => void;
-type UseWallet = () => State & {
+type UseWallet = () => Partial<State> & {
   connect: ConnectWallet;
   disconnect: DisconnectWallet;
 };
@@ -70,7 +72,7 @@ export const useWallet: UseWallet = () => {
       network: undefined,
       account: undefined,
     });
-  }, [web3Modal?.clearCachedProvider]);
+  }, [web3Modal]);
 
   return {
     connect,
