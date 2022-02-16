@@ -4,6 +4,17 @@ An easy-to-integrate React hook for connecting and interacting with a Web 3 wall
 
 Uses [Web3Modal](https://github.com/Web3Modal/web3modal) and [Zustand](https://github.com/pmndrs/zustand).
 
+### Installation
+
+```
+yarn add @gimmixorg/use-wallet
+```
+
+```
+npm add @gimmixorg/use-wallet
+```
+
+
 ### Example Connect / Disconnect button
 
 ```
